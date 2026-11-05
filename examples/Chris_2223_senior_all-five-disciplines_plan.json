@@ -1,0 +1,377 @@
+{
+ "kind": "bsce-degree-plan",
+ "schema": 1,
+ "savedWith": "7.0",
+ "savedAt": "2026-11-04T20:21:49.328Z",
+ "plan": {
+  "name": "Chris Example",
+  "id": "30000003",
+  "advisor": "S. Hamel",
+  "date": "2026-11-04",
+  "catalog": "2223",
+  "startYear": 2022,
+  "years": [
+   {
+    "fall": [
+     {
+      "code": "COMM A111",
+      "done": "X"
+     },
+     {
+      "code": "WRTG A111",
+      "done": "X"
+     },
+     {
+      "code": "CHEM A105",
+      "done": "X"
+     },
+     {
+      "code": "CHEM A105L",
+      "done": "X"
+     },
+     {
+      "code": "ENGR A151",
+      "done": "X"
+     },
+     {
+      "code": "MATH A251",
+      "done": "X"
+     },
+     {
+      "code": "ES A106",
+      "done": "X"
+     }
+    ],
+    "spring": [
+     {
+      "code": "ES A261",
+      "done": "X"
+     },
+     {
+      "code": "PHYS A211",
+      "done": "X"
+     },
+     {
+      "code": "PHYS A211L",
+      "done": "X"
+     },
+     {
+      "code": "MATH A252",
+      "done": "X"
+     },
+     {
+      "code": "CHEM A106",
+      "done": "X"
+     },
+     {
+      "code": "CHEM A106L",
+      "done": "X"
+     },
+     {
+      "code": "GEO A155",
+      "done": "X"
+     }
+    ],
+    "summer": [
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     }
+    ],
+    "hasSummer": false
+   },
+   {
+    "fall": [
+     {
+      "code": "PHYS A212",
+      "done": "X"
+     },
+     {
+      "code": "PHYS A212L",
+      "done": "X"
+     },
+     {
+      "code": "MATH A253",
+      "done": "X"
+     },
+     {
+      "code": "SS1",
+      "done": "X"
+     },
+     {
+      "code": "WRTG A212",
+      "done": "X"
+     },
+     {
+      "code": "ES A209",
+      "done": "X"
+     },
+     {
+      "code": "CE A201",
+      "done": "X"
+     }
+    ],
+    "spring": [
+     {
+      "code": "MATH A302",
+      "done": "X"
+     },
+     {
+      "code": "PHIL A305",
+      "done": "X"
+     },
+     {
+      "code": "BS",
+      "done": "X"
+     },
+     {
+      "code": "ES A302",
+      "done": "X"
+     },
+     {
+      "code": "ES A210",
+      "done": "X"
+     },
+     {
+      "code": "CE A206",
+      "done": "X"
+     },
+     {
+      "code": "",
+      "done": ""
+     }
+    ],
+    "summer": [
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     }
+    ],
+    "hasSummer": false
+   },
+   {
+    "fall": [
+     {
+      "code": "CE A334",
+      "done": "X"
+     },
+     {
+      "code": "SS2",
+      "done": "X"
+     },
+     {
+      "code": "CE A341",
+      "done": "X"
+     },
+     {
+      "code": "ES A341",
+      "done": "X"
+     },
+     {
+      "code": "ES A331",
+      "done": "X"
+     },
+     {
+      "code": "",
+      "done": ""
+     }
+    ],
+    "spring": [
+     {
+      "code": "CE A420",
+      "done": "X"
+     },
+     {
+      "code": "CE A310",
+      "done": "X"
+     },
+     {
+      "code": "CE A351",
+      "done": "X"
+     },
+     {
+      "code": "HU1",
+      "done": "X"
+     },
+     {
+      "code": "CE A442",
+      "done": "X"
+     },
+     {
+      "code": "",
+      "done": ""
+     }
+    ],
+    "summer": [
+     {
+      "code": "ESM A450",
+      "done": "X"
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     }
+    ],
+    "hasSummer": true
+   },
+   {
+    "fall": [
+     {
+      "code": "CE A461",
+      "done": "IP"
+     },
+     {
+      "code": "CE A437",
+      "done": "IP"
+     },
+     {
+      "code": "AKNS",
+      "done": "IP"
+     },
+     {
+      "code": "CE A421",
+      "done": "IP"
+     },
+     {
+      "code": "CE A410",
+      "done": "IP"
+     },
+     {
+      "code": "CE A432",
+      "done": "IP"
+     },
+     {
+      "code": "CE A426",
+      "done": "IP"
+     }
+    ],
+    "spring": [
+     {
+      "code": "FA",
+      "done": ""
+     },
+     {
+      "code": "CE A403",
+      "done": ""
+     },
+     {
+      "code": "CE A438",
+      "done": ""
+     },
+     {
+      "code": "CE A464",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     }
+    ],
+    "summer": [
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     },
+     {
+      "code": "",
+      "done": ""
+     }
+    ],
+    "hasSummer": false
+   }
+  ],
+  "showCovers": true
+ }
+}

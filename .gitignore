@@ -1,0 +1,6 @@
+# Saved student plans: never commit real student data
+*_DegreePlan_20*.html
+*.crdownload
+.DS_Store
+Thumbs.db
+__pycache__/
