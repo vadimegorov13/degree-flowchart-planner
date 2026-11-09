@@ -82,7 +82,13 @@ python3 scripts/build.py data/uaa-bsce
 # wrote dist/BSCE_DegreePlan_EDITOR_v7.0.html
 ```
 
-There are no dependencies and no bundler. Edit `src/app.js` or `src/app.css`, rebuild, and open the file in a browser.
+This standard build is the one to hand to advisors. The program is fixed by `program.json` (UAA BSCE), and the editor has no Program tab. To adapt the tool to a different program, build an editor that has the Program tab and the course import / remove-all tools:
+
+```bash
+python3 scripts/build.py data/uaa-bsce --program-tab
+```
+
+An editor keeps its build type when it saves new files. There are no dependencies and no bundler. Edit `src/app.js` or `src/app.css`, rebuild, and open the file in a browser.
 
 ## Privacy
 

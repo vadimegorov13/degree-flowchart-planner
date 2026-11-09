@@ -7,6 +7,8 @@ const MODE = JSON.parse(document.getElementById('dp-mode').textContent || '{}');
 const CSS_TEXT = document.getElementById('dp-css').textContent;
 const APP_TEXT = document.getElementById('dp-app').textContent;
 const EDITOR = !!MODE.editor;
+// Program tab build: adds the Program tab and the course import / remove-all tools for adapting the tool to another program.
+const PROGRAM_TAB = EDITOR && !!MODE.programTab;
 // A saved plan file is a copy of the tool with the plan inside it; a template has none.
 const EMBED = (() => { const n = document.getElementById('dp-plan'); if (!n) return null; try { return JSON.parse(n.textContent); } catch (e) { return null; } })();
 const SC = '<' + '/script>', ST = '<' + '/style>';
@@ -285,7 +287,7 @@ const DIRECTIONS = `
 <p>Fill in the light grey boxes. Everything else updates on its own.</p>
 <ol>
 <li><b>Name, ID, Advisor, Date.</b> These print on your plan and are saved in your plan file only.</li>
-<li><b>Catalog Year</b>, for example <code>2425</code> for 2024–25. The matching flow chart appears on the left. Charts for 2020–21 through 2026–27 are included.</li>
+<li><b>Catalog Year</b>, for example 2024–2025. The matching flow chart appears on the left. Charts for 2020–21 through 2026–27 are included.</li>
 <li><b>First Fall year</b>, in the top Fall Semester heading. It fills in from the catalog year; change it if you started a different year. The other years follow.</li>
 <li><b>Class:</b> type the course number for each term, for example <code>ES A331</code> or <code>CE A432</code>. <code>CE 432</code> and <code>ce432</code> also work. The name and credits fill in.</li>
 <li><b>Completed:</b> <b>X</b> = completed (green on the chart), <b>IP</b> = in progress (yellow), blank = planned (red).</li>
@@ -401,7 +403,7 @@ function hfield(label, key, opts) {
   return [el('label', { for: 'f-' + key, class: 'hl' }, label), input];
 }
 function catalogOptions() {
-  return Object.keys(DATA.catalogs).sort().map(k => [k, `${k}  (${DATA.catalogs[k].label})`]);
+  return Object.keys(DATA.catalogs).sort().map(k => [k, DATA.catalogs[k].label]);
 }
 function renderHeader() {
   formHead.innerHTML = '';
@@ -793,7 +795,7 @@ function buildPrintView() {
   printView.innerHTML = '';
   const info = el('div', { class: 'pv-info' },
     el('span', null, el('b', null, 'Name: '), plan.name || ''), el('span', null, el('b', null, 'ID: '), plan.id || ''),
-    el('span', null, el('b', null, 'Advisor: '), plan.advisor || ''), el('span', null, el('b', null, 'Catalog: '), `${plan.catalog}${cat ? ' (' + cat.label + ')' : ''}`),
+    el('span', null, el('b', null, 'Advisor: '), plan.advisor || ''), el('span', null, el('b', null, 'Catalog: '), cat ? cat.label : plan.catalog),
     el('span', null, el('b', null, 'Date: '), plan.date || ''));
   // Page 1: the whole flow chart.
   if (cat) {
@@ -981,7 +983,7 @@ function buildFile(editor, planObj) {
   const title = editor ? `${sn} Degree Plan Editor` : planObj ? `${String(planObj.plan.name || 'Student').replace(/[<>&]/g, '')} · ${sn} Degree Plan` : `${sn} Degree Plan Template`;
   return '<!doctype html>\n<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">' +
     `<title>${title}</title><style id="dp-css">${CSS_TEXT}${ST}</head><body>` +
-    `<script type="application/json" id="dp-mode">${JSON.stringify({ editor: !!editor })}${SC}` +
+    `<script type="application/json" id="dp-mode">${JSON.stringify(editor && PROGRAM_TAB ? { editor: true, programTab: true } : { editor: !!editor })}${SC}` +
     `<script type="application/json" id="dp-data">${json}${SC}` +
     (planObj ? `<script type="application/json" id="dp-plan">${JSON.stringify(planObj).replace(/<\//g, '<\\/')}${SC}` : '') +
     `<script id="dp-app">${APP_TEXT}${SC}</body></html>`;
@@ -1130,7 +1132,7 @@ function refreshStep2() {
   const s2 = sheets.flowcharts && sheets.flowcharts._step2; if (!s2) return;
   const h = s2.querySelector('.step-head h2'), p = s2.querySelector('.step-head p');
   h.textContent = RU().groupLabel;
-  p.textContent = `Students take one course in ${pickN()} of these groups. An extra ${RU().groupItem}, or a second course in the same ${RU().groupItem}, counts as ${electiveOne()}. Remove all rows if your program has no such rule.`;
+  p.textContent = `Students take one course in ${pickN()} of these groups. An extra ${RU().groupItem}, or a second course in the same ${RU().groupItem}, counts as ${electiveOne()}.` + (PROGRAM_TAB ? ' Remove all rows if your program has no such rule.' : '');
 }
 async function importCourses(after) {
   const ta = el('textarea', { class: 'dlg-input', rows: 10, placeholder: 'CE A101, Intro to Civil Engineering, 3, F\nCE A454, Timber Design, 3, , yes' });
@@ -1180,7 +1182,8 @@ function setupEditor() {
 
   refreshStep2();
 
-  /* Program sheet: names shown on the form, and the rule settings */
+  /* Program sheet: names shown on the form, and the rule settings (Program tab builds only) */
+  if (PROGRAM_TAB) {
   const ps = addSheet('program', 'Program');
   const pf = (label, get, set, hint, type) => {
     const inp = el('input', { type: type || 'text', value: get(), oninput: e => { set(e.target.value); markDirty(); renderHeader(); refreshStep2(); update(); } });
@@ -1203,6 +1206,7 @@ function setupEditor() {
         pf('Elective code', () => RU().electiveShort, v => RU().electiveShort = v, 'Short label on boxes and slots, e.g. TE'),
         pf('Departments for unlisted electives', () => (RU().electiveDepts || []).join(', '), v => RU().electiveDepts = v.split(',').map(x => x.trim().toUpperCase()).filter(Boolean), 'Upper-level courses from these departments still fill a slot, with a warning'),
         pf('Lowest level for unlisted electives', () => RU().electiveMinLevel, v => RU().electiveMinLevel = Number(v) || 3, '3 = 300-level and up', 'number')))));
+  }
 
   /* Courses sheet */
   const cs = addSheet('courses', 'Courses');
@@ -1216,12 +1220,12 @@ function setupEditor() {
         const c = normCode(newCode.value); if (!c) return;
         if (DATA.courses[c]) { banner(c + ' is already in the list.', true); return; }
         DATA.courses[c] = { name: '', offered: '', credits: 3 }; newCode.value = ''; markDirty(); fillDatalist(); filter.value = c; renderCourses();
-      } }, 'Add course'), el('span', { class: 'sep' }),
+      } }, 'Add course'), ...(PROGRAM_TAB ? [el('span', { class: 'sep' }),
       el('button', { onclick: () => importCourses(renderCourses) }, 'Import courses…'),
       el('button', { class: 'quiet', onclick: async () => {
         const ok = await dialog({ icon: 'warn', title: 'Remove every course?', body: `All ${Object.keys(DATA.courses).length} courses will be removed. Use this when starting a different program, then import your own list.`, buttons: [{ label: 'Cancel', value: false }, { label: 'Remove all', value: true, danger: true, focus: true }] });
         if (ok) { DATA.courses = {}; markDirty(); fillDatalist(); renderCourses(); update(); }
-      } }, 'Remove all')),
+      } }, 'Remove all')] : [])),
       el('table', { class: 'courses' }, el('thead', null, el('tr', null, el('th', null, 'Course'), el('th', null, 'Name'), el('th', null, 'Offered'), el('th', null, 'Credits'), el('th', null, 'On elective list'), el('th', null, ''))), tbody)),
     el('section', { class: 'step' }, step('B', 'Equivalent course numbers', 'One group per line, separated by "=". The first number is the one the flow chart uses; older numbers count for the same box. Example: CE A410 = CE A422'), eqArea)));
   eqArea.value = (DATA.equivalents || []).map(g => g.join(' = ')).join('\n');
@@ -1287,7 +1291,7 @@ function setupEditor() {
   ms.append(el('div', { class: 'ed-page' }, man));
 
   // Tab order: editing tabs first, the student view last.
-  tabsBar.prepend(tabsBar.querySelector('button[data-sheet="program"]'));
+  if (PROGRAM_TAB) tabsBar.prepend(tabsBar.querySelector('button[data-sheet="program"]'));
   const planTab = tabsBar.querySelector('button[data-sheet="plan"]');
   planTab.textContent = 'Plan (student view)';
   tabsBar.append(planTab);
@@ -1413,7 +1417,7 @@ async function addYearDialog() {
   const key = el('input', { type: 'text', class: 'dlg-input', placeholder: 'e.g. 2728', maxlength: 4 });
   const label = el('input', { type: 'text', class: 'dlg-input', placeholder: 'e.g. 2027–2028' });
   const from = el('select', { class: 'dlg-input' }, el('option', { value: '' }, "Don't copy (start with no boxes)"));
-  Object.keys(DATA.catalogs).sort().forEach(k => from.append(el('option', { value: k }, `${k} (${DATA.catalogs[k].label})`)));
+  Object.keys(DATA.catalogs).sort().forEach(k => from.append(el('option', { value: k }, DATA.catalogs[k].label)));
   from.value = Object.keys(DATA.catalogs).sort().pop();
   const img = el('input', { type: 'file', accept: 'image/*' });
   const ok = await dialog({ title: 'Add a catalog year', focus: key, body: [
@@ -1434,7 +1438,7 @@ async function addYearDialog() {
     DATA.catalogs[k] = { label: label.value.trim() || k, startYear: 2000 + Number(k.slice(0, 2)), image: src, width: w, height: h, boxes,
       disciplines: JSON.parse(JSON.stringify((src0 || DATA.catalogs[edCat]).disciplines || [])) };
     edCat = k; edSel = -1; markDirty(); renderHeader(); renderEditorStage();
-    banner(`Added catalog ${k}. Check the disciplines and move the boxes to match the new chart.`);
+    banner(`Added catalog year ${DATA.catalogs[k].label}. Check the disciplines and move the boxes to match the new chart.`);
   });
 }
 function renderYearPanel() {
@@ -1442,7 +1446,7 @@ function renderYearPanel() {
   const cat = DATA.catalogs[edCat]; if (!cat) return;
   const keys = Object.keys(DATA.catalogs).sort();
   const sel = el('select', { class: 'year-select', onchange: () => { edCat = sel.value; edSel = -1; renderEditorStage(); } });
-  keys.forEach(k => sel.append(el('option', { value: k }, `${k} (${DATA.catalogs[k].label})`)));
+  keys.forEach(k => sel.append(el('option', { value: k }, DATA.catalogs[k].label)));
   sel.value = edCat;
   const replace = el('input', { type: 'file', accept: 'image/*', style: { display: 'none' }, onchange: () => {
     const f = replace.files[0]; if (!f) return;
@@ -1461,7 +1465,7 @@ function renderYearPanel() {
       el('button', { onclick: () => replace.click() }, 'Replace image'), replace,
       el('button', { class: 'quiet', onclick: async () => {
         if (keys.length < 2) { banner('Keep at least one catalog year.', true); return; }
-        const ok = await dialog({ icon: 'warn', title: `Delete catalog ${edCat}?`, body: `The ${esc(cat.label)} chart and its ${cat.boxes.length} boxes will be removed from the next files you download.`, buttons: [{ label: 'Cancel', value: false }, { label: 'Delete year', value: true, danger: true, focus: true }] });
+        const ok = await dialog({ icon: 'warn', title: `Delete catalog year ${esc(cat.label)}?`, body: `The ${esc(cat.label)} chart and its ${cat.boxes.length} boxes will be removed from the next files you download.`, buttons: [{ label: 'Cancel', value: false }, { label: 'Delete year', value: true, danger: true, focus: true }] });
         if (ok) { delete DATA.catalogs[edCat]; edCat = null; markDirty(); renderHeader(); renderEditorStage(); }
       } }, 'Delete year'),
       el('button', { class: 'primary', onclick: addYearDialog }, '+ Add catalog year'))),

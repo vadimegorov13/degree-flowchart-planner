@@ -8,6 +8,12 @@ You need your program's flow chart as an image (PNG or JPG, ideally 1600 px wide
 
 ### 1. Open the editor
 
+Build an editor with the Program tab first, since the standard build leaves it out:
+
+```bash
+python3 scripts/build.py data/uaa-bsce --program-tab
+```
+
 Open `dist/BSCE_DegreePlan_EDITOR_v7.0.html` in Chrome or Edge. It opens on the **Flowcharts** tab, and the tabs are at the bottom of the page.
 
 ### 2. Program tab: names and rules
@@ -75,5 +81,7 @@ When a new catalog comes out, open your editor file, add the year (copying boxes
    ```bash
    python3 scripts/build.py data/your-program
    ```
+
+   Add `--program-tab` if you want to keep editing names and rules in the editor.
 
 A practical mix: do the box placement in the editor, where you can see it, then copy the resulting `DATA` back into `program.json` for version control. To get that data, open the editor, open the browser console and run `copy(JSON.stringify(__degreePlan.DATA))`. The chart images come out as `data:` URLs; save them as files and point `image` at them, or leave them inline.
